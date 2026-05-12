@@ -1,0 +1,23 @@
+[project]
+name = "video-use"
+version = "0.1.0"
+description = "Conversation-driven video editor skill for Claude Code"
+license = { file = "../../LICENSE" }
+requires-python = ">=3.10"
+dependencies = [
+    "requests",
+    "librosa",
+    "matplotlib",
+    "pillow",
+    "numpy",
+]
+
+[project.optional-dependencies]
+manim = ["manim"]
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.backends.legacy:build"
+
+[tool.setuptools.packages.find]
+where = ["helpers"]
