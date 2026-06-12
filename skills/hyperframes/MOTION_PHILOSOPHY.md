@@ -15,7 +15,7 @@
 4. **Camera never sleeps.** Even on "still" frames, the grid recedes, the coin rotates, particles drift, the vignette breathes. Static = death.
 5. **Motion blur is a feature.** Every transition uses a streak/blur trail — to convey energy AND to mask the cut. Hard cuts feel cheap; whip-streaks feel expensive.
 6. **Object metaphors carry meaning.** Red card = old/broken. Teal coin = new/working. The same coin returns 3 times across the piece. Visual continuity = brand.
-7. **Palette is symbolic, not decorative.** Each color owns one concept. Don’t drop a color in just because it looks nice — assign it a meaning.
+7. **Palette is symbolic, not decorative.** Each color owns one concept. Don't drop a color in just because it looks nice — assign it a meaning.
 8. **Type is a character.** Words SCALE 8×, MORPH, COMPRESS, GLOW. Typography drives ~60% of the storytelling. A text-only beat can be the strongest beat.
 9. **Hold the hero shot.** Logo reveal = ~2s of stillness. Outro card = 5+ seconds. Speed earns space for stillness to land. Kinetic chaos → calm = catharsis.
 10. **One unifying texture across everything.** The reference uses a faint perspective grid + crosshair (+) registration marks at intersections. Even when invisible, that grid is the spine of the whole piece.
@@ -25,7 +25,7 @@
 
 ## 1 · The Reference Timeline (30s)
 
-| Time | Beat | What’s on screen | Engine |
+| Time | Beat | What's on screen | Engine |
 |------|------|------------------|--------|
 | 0.0–0.5 | Empty stage | Black void, perspective grid floor recedes, 4 crosshair `+` markers at center, soft floor wash | Camera holds; grid hints at depth |
 | 0.5–1.5 | "Global payments" | Chrome-gradient type appears center, fades subtly | Word reveal #1 |
@@ -44,12 +44,12 @@
 | 13.0–14.5 | "Sign Up In Seconds" | iPhone slides up from below, Account-linking app screen | Product surface #1 |
 | 14.5–16.0 | "Send Funds Anywhere" | Different phone screen, transaction list | Product surface #2 |
 | 16.0–17.5 | "Built For Businesses" | Laptop showing "Create Transfer" form | Product surface #3 |
-| 17.5–19.0 | **Dash** | Iridescent chrome wheel/dial centered, "Dash — Move money globally" panel slides in left (blue gradient) | Product family #1 |
-| 19.0–20.5 | **API** | Same wheel rotates, "API — Build your own experience" panel slides in right (purple gradient) | Product family #2 |
+| 17.5–19.0 | **Dash** | Iridescent chrome wheel/dial centered, "Dash — Move money globally" panel slides in left | Product family #1 |
+| 19.0–20.5 | **API** | Same wheel rotates, "API — Build your own experience" panel slides in right | Product family #2 |
 | 20.5–22.0 | **SDK** | Wheel rotates again, yellow segment lit, "SDK — Integrate in just a few lines" | Product family #3 |
 | 22.0–23.5 | Coin returns | Teal coin spinning in cylinder again — callback | Visual rhyme |
 | 23.5–25.0 | "Powered by Stablecoins" | Three coins floating in conical light beam, sparkle particles | Foundation reveal |
-| 25.0–30.0 | **CTA hold** | App icon + "Infinite — Instant, global payments" + "GET STARTED — INFINITE.DEV" | 5s of stillness |
+| 25.0–30.0 | **CTA hold** | App icon + "Infinite — Instant, global payments" + "GET STARTED" | 5s of stillness |
 
 **Three-act structure:**
 - **Act 1 (0–9.5s):** Problem → metaphor → brand reveal
@@ -60,123 +60,107 @@ Notice the **rule of threes** everywhere: 3 benefits, 3 surfaces, 3 product name
 
 ---
 
-## 2 · The Visual Vocabulary (every technique in the piece)
+## 2 · The Visual Vocabulary
 
-### 2.1 Backgrounds (in priority order)
+### 2.1 Backgrounds (priority order)
 
-| # | Background | Where it lives | How to build in HF |
-|---|-----------|----------------|---------------------|
-| 1 | **Perspective grid floor** | Opening, brand reveal, outro | `<div>` with `transform: perspective(800px) rotateX(60deg)` + `repeating-linear-gradient(0deg, rgba(255,255,255,.06) 0 1px, transparent 1px 80px)` (×2 axes) + SVG `+` crosshairs as `background-image` at intersections. GSAP animates `background-position-y` for parallax. |
-| 2 | **Vignette** | Always | Absolute overlay `<div>` with `background: radial-gradient(ellipse at center, transparent 30%, black 100%)`, `pointer-events: none`. Always on top of bg, below content. |
-| 3 | **Pure black stage** | Brand reveal, between major beats | Just `body { background: #000 }`. Used as a "reset" between sections. |
-| 4 | **Horizontal speed lines** | Comet/whip moments | `repeating-linear-gradient(0deg, rgba(255,255,255,.04) 0 1px, transparent 1px 60px)` with GSAP scrolling `background-position-x` for motion blur trail |
-| 5 | **Iridescent gradient stage** | Wheel scenes (Dash/API/SDK) | Soft conic-gradient or pre-rendered video. Best as `<video muted loop>` for true chromatic shimmer. |
-| 6 | **Conical light beam** | Three-coins finale | `<div>` with `background: conic-gradient(from 180deg at 50% 0%, transparent, rgba(0,255,200,.15) 50%, transparent)`, blurred |
-| 7 | **Sparkle particles** | All grid scenes | 20–40 absolute-positioned `<div>` `+` shapes at random grid intersections, GSAP `stagger.from('random')` opacity tween, `repeat: -1, yoyo: true` |
-| 8 | **Subtle film grain** | Everywhere (super faint) | `npx hyperframes add grain-overlay` |
-| 9 | **Liquid-glass card** | Hero product card, player frames, UI panels | 4-stop diagonal gradient `rgba(255,255,255,.075/.025/.010/.055)` + `backdrop-filter: blur(14px) saturate(1.12)` + inner highlight `inset 0 1px 0 rgba(255,255,255,.22)` + thin 1px border. |
-| 10 | **Film strip (pure CSS)** | Footage / compositing beats | `repeating-linear-gradient(90deg, transparent 0-40px, #0d0d0d 40-44px, transparent 44-60px, rgba(255,255,255,.06) 60-80px, transparent 80-100px)` — animate via `translateX`. |
-| 11 | **Film grain (pure CSS, no PNG)** | Anywhere grain is wanted deterministically | Three radial-gradients at tile sizes 3/5/7px, each a 1px dot at a different position, alphas `.03/.02/.015`. Non-repeating look, fully deterministic, headless-safe. |
+| # | Background | How to build in HF |
+|---|-----------|---------------------|
+| 1 | **Perspective grid floor** | `<div>` with `transform: perspective(800px) rotateX(60deg)` + `repeating-linear-gradient` (×2 axes) + SVG `+` crosshairs. GSAP animates `background-position-y` for parallax. |
+| 2 | **Vignette** | Absolute overlay `<div>` with `background: radial-gradient(ellipse at center, transparent 30%, black 100%)`. Always on top of bg, below content. |
+| 3 | **Pure black stage** | `body { background: #000 }`. Reset between major sections. |
+| 4 | **Horizontal speed lines** | `repeating-linear-gradient` with GSAP scrolling `background-position-x`. |
+| 5 | **Film grain** | `npx hyperframes add grain-overlay` |
+| 6 | **Liquid-glass card** | 4-stop diagonal gradient + `backdrop-filter: blur(14px) saturate(1.12)` + inner highlight `inset 0 1px 0 rgba(255,255,255,.22)`. |
 
 ### 2.2 Type System
 
-- **Single sans-serif throughout.** Geometric, generous tracking. (Inter, Suisse Int’l, or SF Pro all read correctly.)
-- **All headline text uses chrome gradient:** `background: linear-gradient(180deg, #ffffff 0%, #999999 60%, #cccccc 100%); -webkit-background-clip: text; color: transparent;`
-- **Halo glow on emphasis words:** `text-shadow: 0 0 20px rgba(255,255,255,0.6), 0 0 40px rgba(255,255,255,0.3)`
-- **Word-by-word kinetic reveal** (NOT character-by-character — words land harder):
-  ```html
-  <span class="clip word" data-start="0.0">Global</span>
-  <span class="clip word" data-start="0.4">payments</span>
-  <span class="clip word" data-start="0.8">are</span>
-  <span class="clip word" data-start="1.0">a</span>
-  <span class="clip word" data-start="1.2">pain</span>
+- **Single geometric sans-serif throughout** (Inter, Suisse Int'l, or SF Pro)
+- **All headline text uses chrome gradient:**
+  ```css
+  background: linear-gradient(180deg, #ffffff 0%, #999999 60%, #cccccc 100%);
+  -webkit-background-clip: text;
+  color: transparent;
   ```
-  GSAP: `tl.from('.word', { y: 30, opacity: 0, scale: 0.85, duration: 0.6, ease: 'power3.out', stagger: 0.35 })`
-- **Type SCALES dramatically.** Section labels at 48px. Hero kinetic-type at 480px+ (literal screen-filling).
-- **Chrome-gradient sweep (exact recipe):**
+- **Halo glow on emphasis words:** `text-shadow: 0 0 20px rgba(255,255,255,0.6), 0 0 40px rgba(255,255,255,0.3)`
+- **Word-by-word kinetic reveal** (NOT character-by-character):
+  ```js
+  tl.from('.word', { y: 30, opacity: 0, scale: 0.85, duration: 0.6, ease: 'power3.out', stagger: 0.35 })
+  ```
+- **Type SCALES dramatically.** Section labels at 48px. Hero kinetic-type at 480px+.
+- **Chrome sweep recipe:**
   ```css
   background: linear-gradient(90deg,
     #14110a 0%, #14110a 15%,
     #5a3215 25%, #c84f1c 40%, #e2b53f 55%, #2a8a7c 70%,
     #14110a 85%, #14110a 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
   background-size: 300% 100%;
-  background-position: 100% 0;  /* resting dark */
+  background-position: 100% 0; /* resting dark */
   ```
-  Tween `backgroundPosition` from `100% 0` → `0% 0` over `0.6s` `power2.out` with `stagger: 0.04` across words.
-- **Word-reveal carrier pattern.** First word carries the cut’s momentum with a 360px slide; subsequent words decay geometrically: `360 → 120 → 60 → 25 → 12px`. Carrier uses `expo.out 0.33s`; tail words `power2.out 0.20s`.
-- **Per-beat font discipline.** Reference roster: Instrument Serif (editorial/hero) · Space Grotesk (tech) · Bebas Neue (impact) · Inter (UI) · EB Garamond italic (footage) · Cormorant Garamond italic (3D) · Azeret Mono (shader/data) · Geist (product) · JetBrains Mono / SF Mono (terminal).
+  Tween `backgroundPosition` from `100% 0` → `0% 0` over `0.6s`.
+- **Per-beat font discipline:** Use a different Google Font per beat. Contrast sells "different universes". Roster: Instrument Serif · Space Grotesk · Bebas Neue · Inter · EB Garamond · Cormorant Garamond · Azeret Mono · Geist · JetBrains Mono.
 
 ### 2.3 Color Story (memorize the meanings)
 
-| Color | Hex (approx) | Meaning | Where used |
-|-------|------|---------|------------|
-| **Black** | `#000` / `#0a0a0a` | Canvas / silence | Always |
-| **Chrome white→gray** | gradient `#fff → #999` | Premium / brand voice | All headline type |
-| **Red** | `#e10b1f` | Problem / old / broken | Credit card |
-| **Teal/cyan** | `#33d4c8` / `#5ee2d9` | Solution / brand / core | Coin, infinity logo |
-| **Magenta/purple** | `#a155ff` / `#7e42d8` | Speed / energy / API | Lightning comet, API panel |
-| **Blue** | `#3b82f6` / `#5db4ff` | Connection / global | Network energy, "Global" word, Dash panel |
-| **Neon orange/yellow** | `#ff9430` / `#ffd84a` | Value / affordability | Recolored flowchart |
-| **Iridescent chrome** | conic spectrum | Sophistication / API depth | Wheel UI |
+| Color | Hex | Meaning |
+|-------|-----|---------|
+| **Black** | `#000` | Canvas / silence |
+| **Chrome white→gray** | gradient | Premium / brand voice |
+| **Red** | `#e10b1f` | Problem / old / broken |
+| **Teal/cyan** | `#33d4c8` | Solution / brand / core |
+| **Magenta/purple** | `#a155ff` | Speed / energy / API |
+| **Blue** | `#3b82f6` | Connection / global |
+| **Neon orange/yellow** | `#ff9430` | Value / affordability |
 
-**Discipline:** when adding a new scene, ask “what’s the one color carrying this beat?” If you can’t name it, you haven’t earned it.
+**Discipline:** when adding a new scene, ask "what's the ONE color carrying this beat?" If you can't name it, you haven't earned it.
 
-### 2.4 Motion Vocabulary (the moves you’ll re-use forever)
+### 2.4 Motion Vocabulary
 
-| Move | What it does | GSAP recipe |
-|------|--------------|-------------|
-| **Camera dolly through type** | Text grows from 1× to 8×+, opacity fades to 0 at peak | `tl.fromTo(text, { scale: 1, opacity: 1 }, { scale: 8, opacity: 0, duration: 1.5, ease: 'power2.in' })` |
-| **Light-streak whip** | Glowing white→transparent gradient bar zips across the frame in 0.3–0.4s | `gsap.fromTo(streak, { xPercent: -150 }, { xPercent: 250, duration: 0.4, ease: 'power3.in' })` |
-| **Word ghost reveal** | Word #2 starts entering while word #1 is still leaving (~0.15s overlap) | `stagger: 0.35` with each word’s exit at `+= 0.5` |
-| **Object morph drift** | Object A scales down + drifts off-axis, Object B scales up from same vector | Two `<div>`s, `to A: { x: 200, scale: 0.5, opacity: 0 }`, `from B: { x: -200, scale: 0.5, opacity: 0 }` |
-| **Coin spin reveal** | 3D rotateY from 90° (edge-on) to 0° (face), with subtle scale bounce | `tl.from(coin, { rotateY: 90, duration: 0.8, ease: 'back.out(1.4)' })` |
-| **Energy pulse along path** | Glow travels along a network edge to “activate” a node | SVG path with `stroke-dasharray + stroke-dashoffset` animated 1→0; node lights up at path end |
-| **Color recolor (no cut)** | Same composition, palette shifts via CSS variables | `tl.to(':root', { '--accent': '#ff9430', duration: 0.6 })` |
-| **Slide-up phone reveal** | Device mockup enters from bottom edge | `tl.from(phone, { y: '100%', duration: 1, ease: 'power3.out' }, 0)` |
-| **Wheel + side-panel pattern** | Central UI rotates while text panels slide in from L/R | `tl.to(wheel, { rotation: 120, duration: 1.5 })` then `.from(panel, { x: -100, opacity: 0 }, '<0.3')` |
-| **Floating cluster drift** | 3+ objects gently bob and drift continuously | `gsap.to(coins, { y: '-=15', duration: 2, repeat: -1, yoyo: true, ease: 'sine.inOut', stagger: { each: 0.4, from: 'random' } })` |
-| **Shimmer sweep on hold** | A single chrome glint passes over the logo every few seconds | `npx hyperframes add shimmer-sweep` |
-| **Vignette breath** | Vignette opacity wobbles 0.7→0.9 to keep “still” frames alive | `gsap.to(vignette, { opacity: 0.9, duration: 4, repeat: -1, yoyo: true, ease: 'sine.inOut' })` |
-| **Cut-the-curve vertical whip** | Default adjacent-beat transition | Exit: `tl.to(wrap, { y: -150, filter: "blur(30px)", duration: 0.33, ease: "power2.in" })`; Entry: `gsap.set(wrap, { y: 150, filter: "blur(30px)" })` then `tl.to(wrap, { y: 0, filter: "blur(0px)", duration: 1.0, ease: "power2.out" }, 0)` |
-| **Faux-cursor click event** | Full 7-tween sequence selling a UI interaction | Cursor compress (0.07s power4.in) → ripple expand (0.2s power2.out) → cursor release (0.3s back.out(3)) → target overshoot (0.2s elastic.out(1, 0.4)) → settle |
-| **Card splits** | Two identical DOM cards stacked; split left/right | `tl.to(cardFront, { x: 180, rotation: 3, duration: 0.7, ease: 'power2.out' }, 6.0)` + `tl.to(cardBack, { x: -180, rotation: -3, ... }, 6.0)` |
+| Move | GSAP recipe |
+|------|-------------|
+| **Camera dolly through type** | `tl.fromTo(text, { scale: 1, opacity: 1 }, { scale: 8, opacity: 0, duration: 1.5, ease: 'power2.in' })` |
+| **Light-streak whip** | `gsap.fromTo(streak, { xPercent: -150 }, { xPercent: 250, duration: 0.4, ease: 'power3.in' })` — fire AT the cut |
+| **Word ghost reveal** | `stagger: 0.35` with each word's exit at `+= 0.5`, overlap by 0.15s |
+| **Object morph drift** | Two `<div>`s, A scales down + drifts off-axis, B scales up from same vector, light streak hides swap |
+| **Coin spin reveal** | `tl.from(coin, { rotateY: 90, duration: 0.8, ease: 'back.out(1.4)' })` — needs `transform-style: preserve-3d` |
+| **Energy pulse along path** | SVG `stroke-dasharray + stroke-dashoffset` animated 1→0, node lights up at path end |
+| **Color recolor (no cut)** | `tl.to(':root', { '--accent': '#ff9430', duration: 0.6 })` — single tween recolors everything |
+| **Floating cluster drift** | `gsap.to(coins, { y: '-=15', duration: 2, repeat: -1, yoyo: true, ease: 'sine.inOut', stagger: 0.4 })` |
+| **Cut-the-curve vertical whip** | Exit: `tl.to(wrap, { y: -150, filter: "blur(30px)", duration: 0.33, ease: "power2.in" })` / Entry: `gsap.set(wrap, { y: 150, filter: "blur(30px)" })` then `tl.to(wrap, { y: 0, filter: "blur(0px)", duration: 1.0, ease: "power2.out" })` |
+| **Faux-cursor click** | 1. Compress cursor `scale: 0.82, 0.07s` 2. Compress target `scale: 0.96, 0.07s` 3. Ripple `scale: 0→2.5, opacity: 0.9→0` 4. Release `back.out(3)` 5. Overshoot `elastic.out(1, 0.4)` 6. Settle |
+| **Vignette breath** | `gsap.to(vignette, { opacity: 0.9, duration: 4, repeat: -1, yoyo: true, ease: 'sine.inOut' })` |
 
 ### 2.5 Transition Catalog
 
-| Transition | When to use | HF block / approach |
-|-----------|-------------|---------------------|
-| **Light-streak whip** | Default cut between scenes | Custom div + GSAP, OR `npx hyperframes add whip-pan` |
-| **Cinematic zoom-through** | Going from text into 3D space | `npx hyperframes add cinematic-zoom` |
-| **Cross-warp morph** | One object becoming another | `npx hyperframes add cross-warp-morph` |
-| **Color recolor (no cut)** | Two related ideas on same composition | CSS variables + GSAP tween |
-| **Flash-through-white** | Major act break | `npx hyperframes add flash-through-white` |
-| **Swirl-vortex** | Product-family rotations | `npx hyperframes add swirl-vortex` |
-| **Hard cut on action** | When a whip-streak peaks | Align scene `data-start` with the streak’s mid-frame |
+| Transition | HF block |
+|-----------|----------|
+| **Light-streak whip** (default) | custom div + GSAP or `npx hyperframes add whip-pan` |
+| **Cinematic zoom-through** | `npx hyperframes add cinematic-zoom` |
+| **Cross-warp morph** | `npx hyperframes add cross-warp-morph` |
+| **Color recolor (no cut)** | CSS variables + GSAP — no shader needed |
+| **Flash-through-white** (act break) | `npx hyperframes add flash-through-white` |
+| **Swirl-vortex** | `npx hyperframes add swirl-vortex` |
 
 ### 2.6 Pacing Discipline
 
-- **Default scene length:** 1.0–2.0 seconds. If longer, it must be a hero moment or the outro.
-- **Reveal cadence:** new visual element every 0.3–0.6s within a scene. No dead air > 1s mid-piece.
-- **Word-reveal stagger:** 0.3–0.4s per word for narrative reads, 0.5–0.6s for dramatic single-word emphasis.
-- **Whip transition duration:** 0.3–0.4s. Faster feels glitchy; slower loses energy.
-- **Hold durations:** Logo crystallization 1.5–2s, final CTA card 4–6s, section headlines 1–1.5s after reveal.
-- **The breathing rule:** every ~7–8s of kinetic density, give the viewer a 1s “rest” beat.
+- **Default scene length:** 1.0–2.0s. Longer = hero moment or outro only.
+- **Reveal cadence:** new visual element every 0.3–0.6s. No dead air > 1s mid-piece.
+- **Word-reveal stagger:** 0.3–0.4s narrative, 0.5–0.6s dramatic single-word.
+- **Whip transition:** 0.3–0.4s. Faster = glitchy; slower = loses energy.
+- **Logo hold:** 1.5–2s. **Outro CTA hold:** 4–6s.
+- **Breathing rule:** every ~7–8s of density, give 1s rest beat.
 
 ### 2.7 Audio Mix Defaults
 
 | Layer | `data-volume` | Role |
 |------|---------------|------|
 | Voiceover | `1.0` | Primary, drives timing |
-| Underscore (warm ambient pad) | `0.15` | Barely there — sets mood |
-| SFX (clicks, twinkles, whooshes) | `0.2` | Tails allowed to bleed into next beat |
-
-Wire as sibling `<audio>` elements in the root composition, never mixed inside a `<video>`.
+| Underscore (warm ambient pad) | `0.15` | Sets mood without competing |
+| SFX | `0.2` | Tails can bleed into next beat |
 
 ---
 
-## 3 · Building This in HyperFrames — Concrete Recipes
+## 3 · Building in HyperFrames — Key Recipes
 
 ### 3.1 Composition shell
 
@@ -187,28 +171,15 @@ my-promo/
 │   ├── 01-intro-type.html
 │   ├── 02-card-to-coin.html
 │   ├── 03-brand-reveal.html
-│   ├── 04-fast-network.html
-│   ├── 05-product-surfaces.html
-│   ├── 06-dash-api-sdk.html
-│   ├── 07-stablecoins.html
 │   └── 08-cta-outro.html
 └── assets/
-    ├── coin-rotate.mp4
-    ├── card-3d.png
-    ├── phone-mockup-1.png
-    └── ambient-music.mp3
 ```
 
-### 3.2 The grid background (re-use everywhere)
+### 3.2 Grid background
 
 ```html
-<div class="stage" data-composition-id="...">
-  <div class="grid-floor clip" data-start="0" data-duration="30" data-track-index="0"></div>
-  <svg class="crosshairs clip" data-start="0" data-duration="30" data-track-index="1"></svg>
-  <div class="vignette clip" data-start="0" data-duration="30" data-track-index="9"></div>
-  <div class="grain clip" data-start="0" data-duration="30" data-track-index="10"></div>
-  <!-- Content layers go in tracks 2-8 -->
-</div>
+<div class="grid-floor clip" data-start="0" data-duration="30" data-track-index="0"></div>
+<div class="vignette clip"  data-start="0" data-duration="30" data-track-index="9"></div>
 
 <style>
 .grid-floor {
@@ -229,221 +200,114 @@ my-promo/
 ### 3.3 Kinetic-type opener
 
 ```html
-<span class="word" data-start="0.0">Global</span>
-<span class="word" data-start="0.4">payments</span>
-<span class="word" data-start="1.4">pain</span> <!-- hero word -->
+<span class="word w1">Global</span>
+<span class="word w5">pain</span>
 
-<style>
-.word {
-  font-family: 'Inter', sans-serif; font-weight: 700; font-size: 96px;
-  background: linear-gradient(180deg, #fff 0%, #999 100%);
-  -webkit-background-clip: text; color: transparent;
-}
-/* hero word */
-.word:last-child { font-size: 480px; }
-</style>
+<style>.w5 { font-size: 480px; }</style>
 
 <script>
 const tl = gsap.timeline({ paused: true });
-tl.from('.word', { y: 30, opacity: 0, scale: 0.9, duration: 0.5, ease: 'power3.out', stagger: 0.35 }, 0)
-  .fromTo('.word:last-child',
-    { scale: 1, opacity: 1 },
-    { scale: 8, opacity: 0, duration: 1.0, ease: 'power2.in' }, 1.8);
-tl.to({}, { duration: SLOT_DURATION }, 0); // Law #11
+tl.from('.w1', { y: 30, opacity: 0, scale: 0.9, duration: 0.5, ease: 'power3.out' }, 0)
+  .fromTo('.w5', { scale: 1, opacity: 1 }, { scale: 8, opacity: 0, duration: 1.0, ease: 'power2.in' }, 1.8);
+tl.to({}, { duration: SLOT_DURATION }, 0);
 window.__timelines['kinetic-opener'] = tl;
 </script>
 ```
 
-### 3.4 Whip-streak transition
-
-```html
-<div class="whip-streak clip" data-start="3.6" data-duration="0.4" data-track-index="8"></div>
-
-<style>
-.whip-streak {
-  position: absolute; top: 50%; left: 0; width: 40%; height: 8px;
-  background: linear-gradient(90deg, transparent, #fff, transparent);
-  filter: blur(6px); transform: translateY(-50%);
-}
-</style>
-
-<script>
-gsap.fromTo('.whip-streak',
-  { xPercent: -100, scaleX: 0.5 },
-  { xPercent: 250, scaleX: 1.5, duration: 0.4, ease: 'power3.in' });
-</script>
-```
-
-The next scene’s `data-start` should land at the streak’s peak (~halfway through) so the cut is hidden by the brightness.
-
-### 3.5 The Color Recolor Trick (no cut!)
+### 3.4 The Color Recolor Trick
 
 ```js
-// At t=2.5s, recolor the entire flowchart to neon orange
+// No cut — same DOM, meaning shifts
 tl.to('.flowchart', {
-  '--edge': '#ffd84a',
-  '--node-glow': 'rgba(255,148,48,0.7)',
-  duration: 0.6,
-  ease: 'power2.inOut'
+  '--edge': '#ffd84a', '--node-glow': 'rgba(255,148,48,0.7)',
+  duration: 0.6, ease: 'power2.inOut'
 }, 2.5);
 ```
 
-Same DOM, same composition, meaning shifts (Global → Affordable). Cheap to build, expensive to look at.
-
-### 3.6 Registry Items That Map Directly
-
-```bash
-npx hyperframes add grain-overlay          # film grain (always on)
-npx hyperframes add shimmer-sweep          # logo glints
-npx hyperframes add whip-pan              # scene transitions
-npx hyperframes add cinematic-zoom        # text dolly-through
-npx hyperframes add cross-warp-morph      # object morphs
-npx hyperframes add flash-through-white   # act breaks
-npx hyperframes add swirl-vortex          # wheel rotations
-npx hyperframes add light-leak            # speed/energy beats
-npx hyperframes add app-showcase          # phone/laptop reveals
-npx hyperframes add flowchart             # node networks
-npx hyperframes add logo-outro            # final CTA card
-```
-
-### 3.7 The timeline-padding rule (framework-critical)
-
-```js
-const tl = gsap.timeline({ paused: true });
-// … all your tweens …
-tl.to({}, { duration: SLOT_DURATION }, 0); // anchor: forces timeline.duration() >= SLOT_DURATION
-window.__timelines['my-comp'] = tl;
-```
-
-### 3.8 GSAP proxy pattern — Canvas 2D / WebGL inside a timeline
-
-```js
-const proxy = { time: 0 };
-tl.to(proxy, {
-  time: DURATION, duration: DURATION, ease: "none",
-  onUpdate: () => renderAtTime(proxy.time)
-}, 0);
-```
-
-Rules: Canvas 2D is headless-safe; live WebGL can stall the render. No `Math.random()` / `Date.now()` inside — use seeded PRNGs.
-
-### 3.9 `<video>` poster + lastframe bracketing
-
-`<video>` tags flicker on startup and black-frame after their source ends. Bracket every video with static JPG stills:
+### 3.5 Captions as body-level siblings
 
 ```html
-<img id="beat-poster"    src="assets/beat4-poster.jpg">
-<video id="beat-video"   src="assets/beat4-clip.mp4"
-       data-start="7.1" data-duration="8.94" data-track-index="5" muted></video>
-<img id="beat-lastframe" src="assets/beat4-lastframe.jpg">
-```
-
-```bash
-# Generate via ffmpeg
-ffmpeg -y -ss 0    -i clip.mp4 -frames:v 1 -q:v 2 poster.jpg
-ffmpeg -y -sseof -0.04 -i clip.mp4 -frames:v 1 -q:v 2 lastframe.jpg
-```
-
-### 3.10 Captions as body-level siblings
-
-Keep captions OUT of sub-composition timelines. Place in `index.html` outside the master composition `<div>`, `data-track-index ≥ 20`:
-
-```html
-<div class="cap clip" data-start="7.29" data-duration="1.86" data-track-index="30">HyperFrames by HeyGen.</div>
-
+<!-- In index.html, OUTSIDE the master composition div -->
+<div class="cap clip" data-start="7.29" data-duration="1.86" data-track-index="30">Caption text.</div>
 <style>
 .cap {
   position: absolute; bottom: 72px; left: 50%; transform: translateX(-50%);
   padding: 12px 22px; border-radius: 14px;
-  background: rgba(10, 8, 5, 0.55);
-  backdrop-filter: blur(8px);
+  background: rgba(10,8,5,0.55); backdrop-filter: blur(8px);
   font: 500 28px/1.3 Inter, sans-serif; color: #fff;
 }
 </style>
 ```
 
----
+### 3.6 Video poster + lastframe bracketing
 
-## 4 · Pre-flight Checklist (before claiming any motion piece is “done”)
-
-- [ ] **Average scene length ≤ 2s** in mid-section (intro/outro can hold longer)
-- [ ] **No dead air > 1s** anywhere except deliberate hold moments
-- [ ] **Every transition uses motion** (whip, morph, slide, recolor — no hard fades)
-- [ ] **Color palette ≤ 5 active hues** total, each with a meaning
-- [ ] **Every text block uses chrome gradient + halo** — no flat white
-- [ ] **Background grid + crosshairs present in ≥ 60% of scenes**
-- [ ] **Vignette layer on top of every scene**
-- [ ] **Grain overlay on every scene** (subtle, but there)
-- [ ] **One callback minimum** — a visual element that returns later
-- [ ] **Outro holds for 4+ seconds**
-- [ ] **Visual verification done** — extracted frames, opened them, confirmed no cropped faces, no text overflow, no broken transitions
-- [ ] **Every sub-composition timeline ends with `tl.to({}, { duration: SLOT_DURATION }, 0)`**
-- [ ] **All tween end-times snap to multiples of `1/fps`** (at 30fps: 0.0333, 0.0667, 0.1…)
-- [ ] **Ran the timeline-duration diagnostic** in devtools console
-
-### 4.1 GSAP Code Dictionary
-
-**Easings by purpose:**
-
-| Purpose | Ease | Typical duration |
-|---|---|---|
-| Word reveal (slide-in) | `expo.out` | 0.20–0.33s |
-| Generic element enter | `power2.out` | 0.2–0.5s |
-| Generic element exit | `power2.in` | 0.2–0.33s |
-| Beat-to-beat whip EXIT | `expo.in` / `power2.in` | 0.2–0.33s |
-| Beat-to-beat whip ENTRY | `expo.out` / `power2.out` | 0.5–1.0s |
-| Camera pan | `power2.inOut` | 1.2–2.3s |
-| Linear hold | `"none"` | 0.4–0.65s |
-| Bouncy card settle | `back.out(1.2)`–`back.out(1.5)` | 0.3–0.5s |
-| Click compress | `power4.in` | 0.07s |
-| Click release | `back.out(3)` | 0.30s |
-| UI overshoot | `elastic.out(1, 0.3)`–`elastic.out(1, 0.4)` | 0.20s |
-| Breathe / drift | `sine.inOut` yoyo | 2–4s, `repeat: -1` |
-
-**Stagger values:**
-- Chrome-gradient sweep across words: `0.04`
-- Dot-grid ripple per-column: `0.019`; within-column: `0.004`
-- Code-stream lines: `0.06`
-- Harmonic bar spikes: `(i % 12) * 0.008`
-
-**Don’t use `gsap.defaults()`** — every tween declares its ease/duration explicitly.
+```html
+<img  id="beat-poster"    src="assets/beat-poster.jpg">
+<video id="beat-video"   src="assets/beat-clip.mp4"
+       data-start="7.1" data-duration="8.94" data-track-index="5" muted></video>
+<img  id="beat-lastframe" src="assets/beat-lastframe.jpg">
+```
+```js
+tl.set('#beat-poster',    { display: 'none' }, 7.1);
+tl.set('#beat-lastframe', { opacity: 1 }, 16.04);
+```
+```bash
+# Generate:
+ffmpeg -y -ss 0       -i clip.mp4 -frames:v 1 -q:v 2 poster.jpg
+ffmpeg -y -sseof -0.04 -i clip.mp4 -frames:v 1 -q:v 2 lastframe.jpg
+```
 
 ---
 
-## 5 · The “What Would Infinite Do?” Test
+## 4 · Pre-flight Checklist
 
-Before you ship any motion graphic, ask:
-
-1. **Could I cut this scene in half?** If yes, do it.
-2. **Is this color carrying a meaning?** If no, kill it.
-3. **Does the camera move during this beat?** If no, add drift.
-4. **Where’s the motion blur?** If there’s none on the transition, add a streak.
-5. **Will the viewer see this same visual element again later?** If no, can I make a callback?
-6. **Does the type SCALE during its reveal, or just fade in?** Fading in is the lowest-effort move. Scale.
-7. **What’s the negative space doing?** If 80%+ of the frame isn’t black/dark, you’re over-designing.
-8. **Is this beat ONE idea?** If you can’t summarize it in 2 words, you’ve packed too much in.
-9. **What’s the unifying texture across all scenes?** If you don’t have one, you don’t have a piece — you have clips.
-10. **Where does the viewer rest?** Identify the breathing moments. If there are none, build them in.
-
----
-
-## 6 · Anti-patterns (what NOT to do)
-
-- ❌ **Centered, axis-aligned, motionless text fades.** Always add scale, blur, or directional energy.
-- ❌ **Hard cuts between scenes.** Every cut needs a transition element bridging it.
-- ❌ **Flat white text on flat black background.** Use chrome gradient and halo glow.
-- ❌ **6+ colors across the piece.** You’re decorating, not communicating.
-- ❌ **No callbacks.** A visual element that appears once and never returns wastes a setup.
-- ❌ **Outro that ends on the last beat.** Always hold the CTA for 4+ seconds.
-- ❌ **Scenes that try to say two things.** Split into two scenes.
-- ❌ **Static backgrounds.** Every background should have at least one slow-moving element.
-- ❌ **Decorative grain or vignette.** They’re not decoration — they’re the unifying texture. Every scene, every time.
-- ❌ **Forgetting to render a draft and look at it.** Lint passing ≠ design working. **VIEW THE FRAMES.**
-- ❌ **`Math.random()` / `Date.now()` / unseeded PRNGs inside a render loop.** Use harmonic hashes: `80 + 220 * Math.abs(Math.sin(i*0.7 + 0.3) * Math.cos(i*1.3 + 0.7))`
-- ❌ **Over-relying on registry blocks for benchmark pieces.** The official HF launch video installs ZERO registry blocks — every scene is hand-built. Registry is for production velocity; hand-built scenes are the reference-quality move.
+- [ ] Average scene length ≤ 2s in mid-section
+- [ ] No dead air > 1s except deliberate holds
+- [ ] Every transition uses motion (whip, morph, slide, recolor — no hard fades)
+- [ ] Color palette ≤ 5 active hues, each with a meaning
+- [ ] Every text block uses chrome gradient + halo — no flat white
+- [ ] Background grid + crosshairs present in ≥ 60% of scenes
+- [ ] Vignette layer on every scene
+- [ ] Grain overlay on every scene
+- [ ] At least one callback (visual element that returns)
+- [ ] Outro holds for 4+ seconds
+- [ ] Visual verification done — frames extracted and opened
+- [ ] Every sub-composition timeline ends with `tl.to({}, { duration: SLOT_DURATION }, 0)`
+- [ ] All tween end-times snap to multiples of `1/fps`
+- [ ] Timeline-duration diagnostic run in devtools
 
 ---
 
-## 7 · TL;DR — The Philosophy in One Sentence
+## 5 · The "What Would Infinite Do?" Test
+
+1. Could I cut this scene in half? If yes, do it.
+2. Is this color carrying a meaning? If no, kill it.
+3. Does the camera move during this beat? If no, add drift.
+4. Where's the motion blur? If there's none on the transition, add a streak.
+5. Will the viewer see this visual element again? If no, can I make a callback?
+6. Does the type SCALE during its reveal, or just fade in? Fading in is the lowest-effort move.
+7. What's the negative space doing? If 80%+ isn't black/dark, you're over-designing.
+8. Is this beat ONE idea? If you can't summarize in 2 words, you've packed too much in.
+9. What's the unifying texture across all scenes? If you don't have one, you have clips not a piece.
+10. Where does the viewer rest? Identify the breathing moments. If none, build them in.
+
+---
+
+## 6 · Anti-patterns
+
+- ❌ Centered, axis-aligned, motionless text fades
+- ❌ Hard cuts between scenes — every cut needs a transition element
+- ❌ Flat white text on flat black — use chrome gradient and halo glow
+- ❌ 6+ colors — you're decorating, not communicating
+- ❌ No callbacks — setups that never pay off
+- ❌ Outro that ends on the last beat — always hold 4+s
+- ❌ Scenes that say two things — split them
+- ❌ Static backgrounds — every bg needs one slow-moving element
+- ❌ `Math.random()` / `Date.now()` in render loops — use seeded PRNGs
+- ❌ Skipping visual frame verification — lint passing ≠ design working
+
+---
+
+## 7 · TL;DR
 
 > **One idea per beat, lit not colored, kinetic not still, callbacks not novelty, hold the hero, breathe the outro — the grid is always under everything, every timeline fills its slot, every exit snaps to a frame boundary, and every cut hides inside a motion-blurred whip.**

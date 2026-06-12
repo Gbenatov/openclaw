@@ -1,211 +1,303 @@
 ---
 name: hyperframes
-description: HTML-native motion-graphics production — compose animated short-form video via GSAP + HyperFrames, render to MP4 or ProRes MOV with alpha. Use for motion overlays on top of video-use footage.
+description: HTML-native motion-graphics video production — author GSAP timelines in plain HTML, preview live, and render to MP4. Primary tool for generating overlay videos for the video-use editing pipeline.
 homepage: https://hyperframes.heygen.com
 metadata:
   {
     "openclaw":
       {
         "emoji": "✨",
-        "requires": { "bins": ["node", "npx", "ffmpeg"] },
+        "requires": { "bins": ["node", "ffmpeg"] },
         "install":
           [
             {
-              "id": "npm-hyperframes",
+              "id": "hyperframes-doctor",
               "kind": "shell",
-              "cmd": "npm install hyperframes",
-              "label": "Install HyperFrames (run from inside project folder)",
+              "cmd": "npx hyperframes doctor",
+              "label": "Check HyperFrames dependencies",
             },
           ],
       },
   }
 ---
 
-# HyperFrames — Motion-Graphics Production
+# HyperFrames — HTML-Native Motion Graphics
 
-HTML-native video framework from HeyGen. Compose animations as regular HTML files with paused GSAP timelines attached to `window.__timelines`, render to MP4 (or ProRes 4444 MOV with alpha for compositing). Designed for short-form vertical video, product demos, and motion-graphic overlays.
+HyperFrames is an HTML video framework from HeyGen. Every composition is a **regular HTML file** with a paused GSAP timeline attached to `window.__timelines`. The CLI handles validation, live preview, hot-reload, and rendering to MP4/MOV.
 
-## BEFORE ANY CREATIVE SESSION
+**Not Remotion** — no React, no JSX, no bundler inside compositions. Just HTML + vanilla JS + GSAP.
 
-1. **Read `{baseDir}/MOTION_PHILOSOPHY.md` in full** — the 11 Laws, the pre-flight checklist, and “What Would Infinite Do?” (Section 5). Never skim. The doc evolves.
-2. Re-read **Section 0 (11 Laws)** and **Section 4 (pre-flight checklist)** every time, even on quick iterations.
-3. If the brand has a `DESIGN.md`, read it. See `{baseDir}/DESIGN.ais-example.md` for the pattern.
-4. Run `npx hyperframes doctor` to verify Node, FFmpeg, and Chrome are available.
+## Before Any Creative Work
+
+**Always read `{baseDir}/MOTION_PHILOSOPHY.md` before brainstorming or authoring any composition.** It is the gold standard aesthetic for every HyperFrames build. Re-read sections 0 (11 Laws) and 4 (pre-flight checklist) on every session.
+
+For brand identity, read `{baseDir}/DESIGN.ais-example.md` as a worked example — replace with your own `DESIGN.md`.
+
+## Authoring Loop
+
+1. Read `MOTION_PHILOSOPHY.md` (mandatory)
+2. Edit HTML in `compositions/<name>.html`
+3. `npx hyperframes lint` — fix all errors before rendering
+4. `npx hyperframes preview` — live Studio at http://localhost:3002; get sign-off **before any render**
+5. `npx hyperframes render --quality draft --output renders/draft.mp4`
+6. Extract frames and verify visually — lint passing ≠ design working
+7. Run MOTION_PHILOSOPHY.md pre-flight checklist (section 4)
+8. `npx hyperframes render --quality standard --output renders/final.mp4`
 
 ## Key Commands
 
 ```bash
-# Always run from inside the project folder, not the workspace root
-npx hyperframes preview           # Live Studio on http://localhost:3002 with hot reload
-npx hyperframes lint              # Static HTML validation — always run before rendering
-npx hyperframes compositions      # List comp IDs + resolved durations
+# Authoring
+npx hyperframes preview                                          # Studio with hot reload (port 3002)
+npx hyperframes lint                                             # static HTML validation
+npx hyperframes compositions                                     # list comp IDs + resolved durations
 
 # Rendering
-npx hyperframes render --quality draft    --output renders/draft.mp4    # fast iteration
-npx hyperframes render --quality standard --output renders/final.mp4    # visually lossless 1080p
-npx hyperframes render --quality high     --docker                      # archival/deterministic
-npx hyperframes render --format mov --quality standard --output renders/overlay.mov  # alpha channel
+npx hyperframes render --quality draft    --output renders/draft.mp4
+npx hyperframes render --quality standard --output renders/final.mp4
+npx hyperframes render --quality standard --format mov --output renders/overlay.mov  # ProRes with alpha
+npx hyperframes render --quality high --docker --output renders/archive.mp4
 
 # Catalog
-npx hyperframes catalog --type block      # browse 38 blocks
-npx hyperframes catalog --type component  # browse 3 components
-npx hyperframes add <name>                # install block into compositions/
+npx hyperframes catalog --type block       # browse 38 blocks
+npx hyperframes catalog --type component   # browse 3 components
+npx hyperframes add <name>                 # install a catalog item
 
-# Media pipeline
+# Media
 npx hyperframes transcribe <file> --model small.en --json   # word-level timestamps
-npx hyperframes tts "text" --voice am_adam --output narration.wav       # on-device TTS
+npx hyperframes tts "text" --voice am_adam --output narration.wav
 
 # Diagnostics
-npx hyperframes doctor            # env check (Node, FFmpeg, Chrome, Docker)
-npx hyperframes benchmark         # find optimal workers/quality
-npx hyperframes info --json       # project stats
-npx hyperframes docs <topic>      # inline docs
+npx hyperframes doctor                     # check Node/FFmpeg/Chrome/Docker
+npx hyperframes docs <topic>               # inline docs: data-attributes, gsap, rendering, examples
+npx hyperframes benchmark                  # find optimal workers/quality
 ```
 
-### Render Flags
+### Render quality tiers
 
-| Flag | Values | Notes |
+| Flag | CRF | Use |
 |---|---|---|
-| `--quality` | `draft` / `standard` / `high` | CRF 28 / 18 / 15 |
-| `--fps` | `24` / `30` / `60` | Default 30 |
-| `--format` | `mp4` / `mov` / `webm` | `mov` = ProRes 4444 with alpha (for compositing) |
-| `--workers <n>` | integer | Parallelism |
-| `--gpu` | flag | GPU-accelerated render |
-| `--crf <n>` | integer | Override CRF directly |
+| `--quality draft` | 28 | Fast iteration — cut-point checking |
+| `--quality standard` | 18 | Visually lossless 1080p delivery |
+| `--quality high` | 15 | Archival / deterministic output |
 
-## Authoring Loop (mandatory gates)
+`--format mov` = ProRes 4444 **with alpha channel** — use for video-use overlay compositing.
 
-1. Read `MOTION_PHILOSOPHY.md` at the start of the session
-2. Edit compositions in `index.html` or `compositions/<name>.html`
-3. `npx hyperframes lint` — fix all errors, triage warnings
-4. **Gate 1 — Live Studio preview** before any render: `npx hyperframes preview` → hand the URL, wait for sign-off
-5. `render --quality draft` — extract one frame per scene, call `Read` on every PNG, verify visually
-6. **Gate 2 — Rendered MP4 preview** before final: serve via `npx serve . -p 8080 -n`, wait for sign-off
-7. `render --quality standard` for final delivery
+## Project Structure
 
-**Visual verification is mandatory before delivery.** Lint passing ≠ design working.
+```
+video-projects/<slug>/
+├── index.html                 ← root composition (chains sub-compositions)
+├── compositions/              ← one .html file per scene/beat
+│   └── components/            ← shared snippets (installed via `npx hyperframes add`)
+├── assets/                    ← media (MP4, PNG, MP3, SVG, fonts) — copy brand assets here
+├── renders/                   ← render outputs (gitignored)
+├── hyperframes.json           ← CLI config (registry URL, paths — relative to project folder)
+└── meta.json                  ← id, name, dimensions, fps
+```
+
+**Always run the CLI from inside the project folder.** Running from the workspace root will fail or scan wrong files.
+
+### Creating a new project
 
 ```bash
-# Frame extraction for visual verification
-mkdir -p renders/frames
-for t in 1 3 5 8 12 18 25; do
-  ffmpeg -y -ss $t -i renders/draft.mp4 -frames:v 1 -q:v 2 "renders/frames/t${t}.png"
-done
+mkdir video-projects/<new-slug>
+cd video-projects/<new-slug>
+npx hyperframes init
+# or copy from a sibling: cp -r ../may-shorts-19/{hyperframes.json,meta.json} .
 ```
 
-## Project Layout
+## Render Contract (Non-Negotiable)
 
-```
-my-video/
-├── index.html                 ← root composition, chains sub-compositions via <template data-composition-src>
-├── compositions/
-│   ├── 01-intro.html
-│   ├── 02-main.html
-│   └── components/            ← shared snippets (npx hyperframes add)
-├── assets/                    ← videos, images, audio, transcripts
-├── renders/                   ← output MP4s/MOVs (gitignored)
-├── hyperframes.json           ← CLI config (relative paths, registry URL)
-└── meta.json                  ← project id, name, dimensions, fps
-```
+1. Root `<div>` needs `id`, `data-composition-id`, `data-start="0"`, `data-width`, `data-height`
+2. Timed visible elements need `class="clip"` — **except** `<video>` and `<audio>` (breaks video)
+3. Every timed element needs `data-start`, `data-duration`, `data-track-index`
+4. `data-start` can reference another clip's id: `data-start="intro"`, `data-start="intro + 2"`
+5. `<video>` must be `muted`; audio belongs in sibling `<audio>` elements
+6. Every composition registers exactly one GSAP timeline, paused: `window.__timelines["<comp-id>"]`
+7. **Law #11 — Timeline duration anchor:** `tl.to({}, { duration: SLOT_DURATION }, 0)` at end of every timeline — prevents black-frame flash when `timeline.duration() < data-duration`
+8. Never call `.play()`, `.pause()`, or set `.currentTime` on media — the framework owns playback
+9. Never animate `width/height/top/left` directly on `<video>` — wrap in `<div>` and animate the wrapper
+10. Sub-compositions use `<template>` + `data-composition-src` — never `masterTL.add(child)`
+11. **Determinism:** no `Math.random()`, `Date.now()`, or render-time network fetches. Use seeded PRNGs.
 
-## Render Contract (non-negotiable)
-
-1. Root `<div>`: must have `id`, `data-composition-id`, `data-start="0"`, `data-width`, `data-height`
-2. Timed visible elements: `class="clip"` — **except** `<video>` and `<audio>` (breaks them)
-3. Every timed element: `data-start`, `data-duration`, `data-track-index`
-4. `data-start` can reference another clip’s id: `data-start="intro"`, `data-start="intro + 2"`
-5. Same-track clips cannot overlap — use different `data-track-index` values
-6. Every GSAP timeline: paused, registered as `window.__timelines["<data-composition-id>"]`
-7. **Every timeline ends with `tl.to({}, { duration: SLOT_DURATION }, 0)`** — prevents black-frame flashes (Law #11)
-8. No `.play()`, `.pause()`, or `.currentTime` on media — the framework owns playback
-9. Never animate `width`/`height`/`top`/`left` on `<video>` — wrap in a `<div>`
-10. No `Math.random()`, `Date.now()`, unseeded PRNGs — renders must be deterministic
-11. Sub-compositions use `<template>` + `data-composition-src` — never `masterTL.add(child)`
-
-## Timeline Pattern
+## Timeline Skeleton
 
 ```js
 (() => {
+  const SLOT_DURATION = 5.0; // must match data-duration of this composition
   const tl = gsap.timeline({ paused: true });
-  const SLOT_DURATION = 5.0; // must match data-duration on the host element
 
   // ... your tweens ...
 
   tl.to({}, { duration: SLOT_DURATION }, 0); // Law #11 anchor — non-negotiable
-  window.__timelines['my-comp-id'] = tl;
+  window.__timelines['my-comp'] = tl;        // key must match data-composition-id exactly
 })();
 ```
 
-## Timeline-Duration Diagnostic
+### Diagnose black-frame issues
 
 ```js
-// Run in devtools console while Studio is open
+// Run in devtools console with Studio open:
 const p = document.querySelector('hyperframes-player');
 const iw = p.shadowRoot.querySelector('iframe').contentWindow;
 Object.fromEntries(Object.entries(iw.__timelines).map(([k, v]) =>
   [k, +v.duration().toFixed(4)]));
-// Any value shorter than its data-duration = black-frame risk
+// Any value shorter than its data-duration is a black-frame risk.
 ```
 
-## Registry Blocks (38 available)
+## Core GSAP Patterns
 
-Install with `npx hyperframes add <name>`:
+### Grid background (use everywhere)
 
-**Transitions:** `whip-pan`, `cinematic-zoom`, `cross-warp-morph`, `flash-through-white`, `light-leak`, `swirl-vortex`, `glitch`, `chromatic-radial-split`, `domain-warp-dissolve`, `gravitational-lens`, `ripple-waves`, `sdf-iris`, `thermal-distortion`
+```html
+<div class="grid-floor clip" data-start="0" data-duration="30" data-track-index="0"></div>
+<div class="vignette clip"  data-start="0" data-duration="30" data-track-index="9"></div>
+<!-- grain-overlay: npx hyperframes add grain-overlay -->
 
-**CSS Transition Packs:** `transitions-3d`, `transitions-blur`, `transitions-cover`, `transitions-destruction`, `transitions-dissolve`, `transitions-distortion`, `transitions-grid`, `transitions-light`, `transitions-mechanical`, `transitions-other`, `transitions-push`, `transitions-radial`, `transitions-scale`
+<style>
+.grid-floor {
+  position: absolute; inset: 0;
+  transform: perspective(900px) rotateX(60deg) translateY(20%);
+  background:
+    repeating-linear-gradient(0deg,   rgba(255,255,255,.05) 0 1px, transparent 1px 80px),
+    repeating-linear-gradient(90deg,  rgba(255,255,255,.05) 0 1px, transparent 1px 80px);
+  background-color: #000;
+}
+.vignette {
+  position: absolute; inset: 0; pointer-events: none;
+  background: radial-gradient(ellipse at center, transparent 30%, #000 95%);
+}
+</style>
+```
 
-**Overlays/Textures:** `grain-overlay`, `shimmer-sweep`, `grid-pixelate-wipe`
+### Chrome-gradient type (all headlines)
 
-**Social:** `instagram-follow`, `tiktok-follow`, `yt-lower-third`, `x-post`, `reddit-post`, `spotify-card`, `macos-notification`
-
-**Data/UI:** `data-chart`, `flowchart`, `app-showcase`, `ui-3d-reveal`, `logo-outro`
-
-## Integration with video-use
-
-HyperFrames renders overlays as **ProRes 4444 MOV with alpha channel** (`--format mov`). These feed directly into `video-use`’s EDL `overlays` field and are composited by `render.py`:
-
-```json
-{
-  "sources": { "footage": "/path/to/footage.mp4" },
-  "ranges": [{ "source": "footage", "start": 0, "end": 30 }],
-  "grade": "auto",
-  "subtitles": "edit/master.srt",
-  "overlays": [
-    {
-      "file": "/path/to/my-video/renders/overlay.mov",
-      "start_in_output": 5.0,
-      "duration": 8.0
-    }
-  ]
+```css
+.headline {
+  background: linear-gradient(180deg, #ffffff 0%, #999999 60%, #cccccc 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 20px rgba(255,255,255,0.6), 0 0 40px rgba(255,255,255,0.3);
 }
 ```
 
-**Full pipeline:**
+### Light-streak whip transition
 
-```bash
-# 1. Edit and render the motion-graphics overlay
-cd my-video
-npx hyperframes render --format mov --quality standard --output renders/overlay.mov
-
-# 2. Transcribe footage
-python skills/video-use/helpers/transcribe.py footage.mp4
-
-# 3. Render the final composite (grade + overlay + subtitles + loudnorm)
-python skills/video-use/helpers/render.py edit/edl.json -o edit/final.mp4 --build-subtitles
+```js
+gsap.fromTo('.whip-streak',
+  { xPercent: -100, scaleX: 0.5 },
+  { xPercent: 250, scaleX: 1.5, duration: 0.4, ease: 'power3.in' }
+);
+// Fire AT the cut. Next scene data-start = streak peak (~0.2s into streak).
 ```
 
-## Prompting Shorthand
+### Color recolor (no cut)
 
-- **Motion easing:** smooth / snappy / bouncy / springy / dramatic / dreamy
-- **Caption energy:** hype / corporate / tutorial / storytelling / social
-- **Transition energy:** calm (blur) / medium (push) / high (zoom, glitch)
-- **Audio reactivity:** bass→scale, treble→glow, amplitude→opacity, mids→shape
+```js
+// Same DOM, palette shifts via CSS variables — meaning changes without an edit cut
+tl.to('.flowchart', {
+  '--edge': '#ffd84a', '--node-glow': 'rgba(255,148,48,0.7)',
+  duration: 0.6, ease: 'power2.inOut'
+}, 2.5);
+```
 
-## Documentation
+### GSAP easing quick reference
 
-- Agent index: https://hyperframes.heygen.com/llms.txt
-- Full site: https://hyperframes.heygen.com/introduction
-- Inline: `npx hyperframes docs <topic>` — topics: `data-attributes`, `gsap`, `rendering`, `examples`, `troubleshooting`, `compositions`
-- Block catalog: `https://hyperframes.heygen.com/catalog/blocks/<slug>`
-- Component catalog: `https://hyperframes.heygen.com/catalog/components/<slug>`
+| Purpose | Ease | Duration |
+|---|---|---|
+| Word reveal | `expo.out` | 0.20–0.33s |
+| Element enter | `power2.out` | 0.2–0.5s |
+| Element exit | `power2.in` | 0.2–0.33s |
+| Whip exit | `expo.in` | 0.2–0.33s |
+| Whip entry | `expo.out` | 0.5–1.0s |
+| Camera pan | `power2.inOut` | 1.2–2.3s |
+| Bouncy settle | `back.out(1.4)` | 0.3–0.5s |
+| Click compress | `power4.in` | 0.07s |
+| Click release | `back.out(3)` | 0.30s |
+| Breathe/drift | `sine.inOut` yoyo | 2–4s repeat |
+
+## Registry Blocks (38 available)
+
+```bash
+# Core texture (install on every project)
+npx hyperframes add grain-overlay
+npx hyperframes add shimmer-sweep
+
+# Transitions
+npx hyperframes add whip-pan
+npx hyperframes add cinematic-zoom
+npx hyperframes add cross-warp-morph
+npx hyperframes add flash-through-white
+npx hyperframes add swirl-vortex
+npx hyperframes add light-leak
+npx hyperframes add glitch
+npx hyperframes add chromatic-radial-split
+npx hyperframes add domain-warp-dissolve
+npx hyperframes add gravitational-lens
+npx hyperframes add sdf-iris
+
+# CSS transition packs
+npx hyperframes add transitions-3d
+npx hyperframes add transitions-blur
+npx hyperframes add transitions-cover
+npx hyperframes add transitions-push
+npx hyperframes add transitions-scale
+
+# UI & product
+npx hyperframes add app-showcase
+npx hyperframes add ui-3d-reveal
+npx hyperframes add flowchart
+npx hyperframes add data-chart
+npx hyperframes add logo-outro
+
+# Social overlays
+npx hyperframes add instagram-follow
+npx hyperframes add tiktok-follow
+npx hyperframes add yt-lower-third
+npx hyperframes add macos-notification
+npx hyperframes add x-post
+npx hyperframes add reddit-post
+npx hyperframes add spotify-card
+```
+
+## Integration with video-use Pipeline
+
+HyperFrames generates overlay animations that `render.py` (video-use) composites onto footage:
+
+```bash
+# 1. Render overlay with ProRes alpha
+cd video-projects/my-overlay
+npx hyperframes render --quality standard --format mov --output renders/lower-third.mov
+
+# 2. Wire into video-use EDL
+cat edit/edl.json
+{
+  "sources": { "main": "/footage/interview.mp4" },
+  "ranges": [{ "source": "main", "start": 0.0, "end": 45.0 }],
+  "overlays": [
+    {
+      "file": "/video-projects/my-overlay/renders/lower-third.mov",
+      "start_in_output": 3.0,
+      "duration": 5.0
+    }
+  ],
+  "grade": "auto"
+}
+
+# 3. Render final composite
+python helpers/render.py edit/edl.json -o edit/final.mp4 --build-subtitles
+```
+
+## Visual Verification (Mandatory Before Delivery)
+
+```bash
+# Extract frames from draft for inspection
+mkdir -p renders/frames
+for t in 0.5 1.5 3.0 5.0 8.0; do
+  ffmpeg -y -ss $t -i renders/draft.mp4 -frames:v 1 -q:v 2 "renders/frames/t${t}.png"
+done
+# Then Read each PNG — never ship without having looked at the frames
+```
+
+Lint passing ≠ design working. **View the frames every time.**
